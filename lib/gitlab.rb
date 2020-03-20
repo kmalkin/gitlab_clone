@@ -72,12 +72,13 @@ class Gitlab
 
   def self.get_repos(group_name)
     group_id = get_groups[group_name]
-    string = HTTParty.get("#{Setup.get_gitlabserver}/groups/#{group_id}", :headers => {"PRIVATE-TOKEN" => "#{Setup.get_token}" }, :verify => false).to_json
+    puts Rainbow("\t\"#{group_id}\" group_id results").purple
+    string = HTTParty.get("#{Setup.get_gitlabserver}/groups/#{group_id}?per_page=1000", :headers => {"PRIVATE-TOKEN" => "#{Setup.get_token}" }, :verify => false).to_json
     rep = JSON.parse(string)
   end
 
   def self.get_groups
-    string = HTTParty.get("#{Setup.get_gitlabserver}/groups", :headers => {"PRIVATE-TOKEN" => "#{Setup.get_token}" }, :verify => false).to_json
+    string = HTTParty.get("#{Setup.get_gitlabserver}/groups?per_page=1000", :headers => {"PRIVATE-TOKEN" => "#{Setup.get_token}" }, :verify => false).to_json
     api_ids = JSON.parse(string)
     group_ids = {}
     api_ids.each do |id|
